@@ -1,7 +1,27 @@
+body {
+  background-image: url("images/background.jpg");
+  background-size: cover;
+  background-position: center;
+  font-family: 'Grenze Gotisch', cursive;
+  color: #f5e74c;
+  text-align: center;
+  font-size: 1.15rem; 
+  text-shadow: 3px 3px 2px #140d00;
+}
+
 #game div {
-  border: 1px solid black;
+  border: 3px solid #140d00;
   width: 15%;
   height: 200px;
   margin: 10px;
   display: inline-block;
+  background-position: center;
+  background-size: contain;
 }
+
+
+.notFlipped {
+  background-color: #ffba30;
+}
+
+
