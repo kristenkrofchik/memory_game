@@ -1,5 +1,4 @@
 const gameContainer = document.getElementById("game");
-const allDivs = document.querySelectorAll(".flipped");
 let cardsFlipped = 0;
 let card1 = null;
 let card2 = null;
@@ -13,11 +12,21 @@ const CANDY = [
 'lifesavers', 
 'milkyway', 
 'wrigleysgum',
+'babyruth',
+'kitkat',
+'marsbar',
+'nestle',
+'penguin',
 'm&m',
 'brachs',
 'lifesavers', 
 'milkyway', 
-'wrigleysgum'
+'wrigleysgum',
+'babyruth',
+'kitkat',
+'marsbar',
+'nestle',
+'penguin'
 ];
 
 function shuffle(array) {
@@ -39,61 +48,46 @@ function createDivsForCandy(candyArray) {
   for (let candy of candyArray) {
     const newDiv = document.createElement("div");
     newDiv.classList.add(candy);
-    newDiv.classList.add("notFlipped");
+    newDiv.style.backgroundColor = '#ffba30';
     newDiv.addEventListener("click", handleCardClick);
     gameContainer.append(newDiv);
   }
 }
 
-
-
-
-function handleCardClick(event) { 
-  if (noClicking) return; //cannot click
-  if(event.target.classList.contains('flipped')) return;
-
-  let currentCard = event.target;
-  const imageURL = `url("images/${currentCard.classList[0]}.jpg")`
-  currentCard.style.backgroundImage = imageURL;
-
-
-  if (card1 === null || card2 === null) {
-    currentCard.classList.add("flipped");
-    currentCard.classList.remove("notFlipped");
-    card1 = card1 || currentCard;
-    card2 = currentCard === card1 ? null : currentCard;
-  }
-
-
-if (card1 && card2) {
-    noClicking = true;
-    let check1 = card1.classList[0];//check that they are the same color
-    let check2 = card2.classList;
-
-    if (check1 === check2) {
-      cardsFlipped += 2;
-      card1.removeEventListener("click", handleCardClick);
-      card2.removeEventListener("click", handleCardClick);
-      card1 = null;
-      card2 = null;
-      noClicking = false; //if the cards match
-  
-  } else {
-      setTimeout(function() {
-          card1.style.backgroundColor = "";
-          card2.style.backgroundColor = "";
-          card1.classList.remove("flipped");
-          card2.classList.remove("flipped");
-          card1.classList.add("notFlipped");
-          card2.classList.add("notFlipped");
+function handleCardClick(event) {
+  // if there is a background image, the image will be clicked on, not the div
+  if (!event.target.style.backgroundImage) {
+    // if this is the 1st of a pair clicked, set image
+    if (!card1) {
+      // update score to reflect that the user just made a valid move
+      card1 = event.target;
+      const imageURL = `url("images/${card1.className}.jpg")`;
+      card1.style.backgroundImage = imageURL;
+    }
+    // if this is the 2nd of a pair clicked, set image and compare with 1st
+    else if (!card2) {
+      // update score to reflect that the user just made a valid move
+      card2 = event.target;
+      const imageURL = `url("images/${card2.className}.jpg")`;
+      card2.style.backgroundImage = imageURL;
+      
+      // if images are same, keep the images on and reset vars. for new pair
+      if (card1.className === card2.className) {
+        card1 = null;
+        card2 = null;
+      }
+      // if images are different, clear images and reset vars. after a second
+      else {
+        setTimeout(function() {
+          card1.style.backgroundImage = null;
+          card2.style.backgroundImage = null;
           card1 = null;
-          card2 = null;
-          noClicking = false; //if the cards don't match
-      }, 1000)
+         card2 = null;
+        }, 1000);
+      }
+    }
   }
 }
 
-}
 
-// when the DOM loads
-createDivsForCandy(shuffledCandy);
+document.addEventListener("DOMContentLoaded", createDivsForCandy(shuffledCandy));
